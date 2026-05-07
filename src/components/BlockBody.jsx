@@ -595,14 +595,15 @@ function StoryListBlock({ props, editing, brand, onEdit, ce }) {
   for (let i = 1; i <= count; i++) {
     const k = 's' + i;
     const rowH = Number(props[k + '_h']) || defaultH;
+    const rowW = Number(props[k + '_w']) || 100;
     rows.push(
       <Fragment key={i}>
         <div className="e-storylist__row">
           <EditableImage
             src={props[k + '_img']} editing={editing}
             onReplace={(v) => onEdit(k + '_img', v)}
-            widthPct={100} heightPx={rowH}
-            onResize={(_w, h) => onEdit(k + '_h', h)}
+            widthPct={rowW} heightPx={rowH}
+            onResize={(w, h) => { onEdit(k + '_w', w); onEdit(k + '_h', h); }}
             defaultHeight={defaultH}
             allowResize={true}
             className="e-storylist__img"

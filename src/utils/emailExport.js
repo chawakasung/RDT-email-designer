@@ -209,10 +209,14 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
         const cta = esc(props[`${k}_cta`] || '');
         const href = esc(props[`${k}_href`] || '#');
         const rowH = Number(props[`${k}_h`]) || defaultH;
+        const rowWPct = Math.max(20, Math.min(100, Number(props[`${k}_w`]) || 100));
+        // คอลัมน์รูปสูงสุดครึ่งหน้า (343px จาก 686 inner) — rowWPct % ของคอลัมน์ครึ่งหน้า
+        const colMax = 343;
+        const imgW = Math.round(colMax * rowWPct / 100);
         if (i > 1) rows.push(`<tr><td colspan="3" height="1" style="height:1px;background-color:rgba(10,16,32,0.12);padding:0;font-size:0;line-height:0;">&nbsp;</td></tr>`);
         rows.push(`<tr>
-          <td width="200" valign="top" style="vertical-align:top;padding:20px 24px 20px 0;">
-            ${img ? `<img src="${img}" width="200" height="${rowH}" alt="" style="display:block;width:200px;height:${rowH}px;object-fit:cover;" />` : `<div style="width:200px;height:${rowH}px;background-color:#DBD6D1;">&nbsp;</div>`}
+          <td width="${colMax}" valign="top" style="vertical-align:top;padding:20px 24px 20px 0;width:${colMax}px;">
+            ${img ? `<img src="${img}" width="${imgW}" height="${rowH}" alt="" style="display:block;width:${imgW}px;height:${rowH}px;object-fit:cover;" />` : `<div style="width:${imgW}px;height:${rowH}px;background-color:#DBD6D1;">&nbsp;</div>`}
           </td>
           <td valign="top" style="vertical-align:top;padding:20px 0;">
             <h3 style="font-family:Arial,sans-serif;font-weight:300;font-size:22px;line-height:1.25;color:#544F4F;margin:0 0 8px;">${title}</h3>
