@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 
 // Rich-text Letter block: bold / italic / color + alignment, content stored as HTML
-export function LetterBlock({ html, align, editing, onEdit, onClose }) {
+export function LetterBlock({ html, align, fontSize, editing, onEdit, onClose }) {
+  const fs = Number(fontSize) || 18;
   const ref = useRef(null);
   const [color, setColor] = useState('#0066cc');
   const lastHtml = useRef(html);
@@ -55,6 +56,7 @@ export function LetterBlock({ html, align, editing, onEdit, onClose }) {
       <div
         ref={ref}
         className="e-letter__body"
+        style={{ fontSize: fs + 'px' }}
         contentEditable={editing}
         suppressContentEditableWarning
         onInput={onInput}

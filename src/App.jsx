@@ -8,26 +8,70 @@ import { TOPBAR_ICONS as I } from './components/icons.jsx';
 import { downloadEmailHTML } from './utils/emailExport.js';
 import { Lbl } from './components/Panels.jsx';
 
-const seedBlocks = () => [
-  newBlock('header'),
-  newBlock('hero'),
-  newBlock('text'),
-  newBlock('twocol'),
-  newBlock('quote'),
-  newBlock('button'),
-  newBlock('footer'),
+// สร้าง block ด้วย props ที่กำหนดเอง (ID จะ random ใหม่ทุกครั้ง)
+const mkBlock = (kind, props) => {
+  const b = newBlock(kind);
+  b.props = { ...b.props, ...props };
+  return b;
+};
+
+const FACTORY_BLOCKS = () => [
+  mkBlock('header', {
+    img: '', alt: 'Email banner', href: '',
+    headline: 'A passion for impossible discovery',
+    fontSize: 43, bgColor: '#FFF7F5',
+    flipped: false, showLogo: true, imgX: 50, imgY: 50,
+  }),
+  mkBlock('notice', {
+    note: 'For internal distribution only — sent to all Roche Diagnostics employees',
+    linkText: 'Learn how to read this message in your preferred language',
+    linkHref: 'https://roche.com',
+  }),
+  mkBlock('text', {
+    heading: '',
+    copy: 'Select the desired tool components from the left panel, then use drag-and-drop or move them up and down as needed',
+    heading_size: 20, copy_size: 20,
+    bg_color: '', bg_img: '', bg_scale: 100, bg_pos: 'center center',
+  }),
+  mkBlock('footer', {
+    address: 'Roche Diagnostics (Thailand) Ltd. Head Office 555 RasaTower 18th-19th Floor, Phaholyothin Road, Chatuchak, Bangkok 10900 Thailand',
+    legal: 'The information transmitted in this message is intended only for the person or entity to which it is addressed and may contain confidential and/or privileged material. Any review, re-transmission dissemination or other use of, or taking of any action in reliance upon, this information by persons or entities other than the intended recipient is prohibited. If you receive this message in error, please contact the sender and delete the material from any computer.',
+    bg_color: '#f7f5f2',
+    text_color: '#706B69',
+  }),
 ];
 
+const FACTORY_SETTINGS = {
+  subject: 'Email template for demonstration purposes',
+  preheader: 'This is a demonstration email template for internal testing',
+  fromName: 'Roche Internal Comms',
+  fromEmail: 'onboarding@resend.dev',
+  replyTo: 'no-reply@roche.com',
+  brand: { primary: '#0B41CD', heroBg: '#FFF7F5' },
+};
+
+const DEFAULT_KEY = 'roche-email-builder:default';
+
+function loadSavedDefault() {
+  try {
+    const raw = localStorage.getItem(DEFAULT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.blocks)) return null;
+    return parsed;
+  } catch { return null; }
+}
+
 function App() {
-  const [blocks, setBlocks] = useState(seedBlocks);
+  // Lazy init — โหลด default ที่ user save ไว้ ถ้าไม่มีก็ใช้ factory
+  const [blocks, setBlocks] = useState(() => {
+    const saved = loadSavedDefault();
+    return saved ? saved.blocks : FACTORY_BLOCKS();
+  });
   const [selectedId, setSelectedId] = useState(null);
-  const [settings, setSettingsState] = useState({
-    subject: "Q2 Town Hall — Hi {{first_name}}, here's the agenda",
-    preheader: '12 min read · Pipeline updates, people stories, and a message from Thomas',
-    fromName: 'Roche Internal Comms',
-    fromEmail: 'onboarding@resend.dev',
-    replyTo: 'no-reply@roche.com',
-    brand: { primary: '#0B41CD', heroBg: '#FFF7F5' },
+  const [settings, setSettingsState] = useState(() => {
+    const saved = loadSavedDefault();
+    return saved && saved.settings ? { ...FACTORY_SETTINGS, ...saved.settings } : FACTORY_SETTINGS;
   });
   const [mode, setMode] = useState('edit');
   const [toast, setToast] = useState(null);
@@ -81,6 +125,48 @@ function App() {
 
   const selected = useMemo(() => blocks.find(b => b.id === selectedId), [blocks, selectedId]);
 
+  const handleSaveAsDefault = () => {
+    const tryStore = (data) => {
+      const json = JSON.stringify(data);
+      const sizeKB = (json.length / 1024).toFixed(0);
+      localStorage.setItem(DEFAULT_KEY, json);
+      return sizeKB;
+    };
+    try {
+      const sizeKB = tryStore({ blocks, settings });
+      flash((lang === 'th' ? 'บันทึกแล้ว · ' : 'Saved · ') + sizeKB + ' KB');
+    } catch (e) {
+      console.error('[Save default] full save failed:', e);
+      // ลองอีกครั้งโดยตัด base64 image ออก (ใหญ่เกิน localStorage)
+      try {
+        const stripImg = (v) => typeof v === 'string' && v.startsWith('data:') ? '' : v;
+        const cleanBlocks = blocks.map(b => ({
+          ...b,
+          props: Object.fromEntries(Object.entries(b.props).map(([k, v]) => [k, stripImg(v)]))
+        }));
+        const sizeKB = tryStore({ blocks: cleanBlocks, settings });
+        flash((lang === 'th' ? 'บันทึก (ตัดรูป base64 ออก) · ' : 'Saved (images stripped) · ') + sizeKB + ' KB');
+      } catch (e2) {
+        console.error('[Save default] retry failed:', e2);
+        flash(lang === 'th' ? 'บันทึกไม่ได้: ' + e2.message : 'Save failed: ' + e2.message);
+      }
+    }
+  };
+
+  const handleResetToDefault = () => {
+    const saved = loadSavedDefault();
+    if (saved) {
+      setBlocks(saved.blocks);
+      setSettingsState({ ...FACTORY_SETTINGS, ...(saved.settings || {}) });
+      flash(lang === 'th' ? 'รีเซ็ตเป็น default ของคุณ' : 'Reset to your default');
+    } else {
+      setBlocks(FACTORY_BLOCKS());
+      setSettingsState(FACTORY_SETTINGS);
+      flash(lang === 'th' ? 'รีเซ็ตเป็นเทมเพลตเริ่มต้น' : 'Reset to factory template');
+    }
+    setSelectedId(null);
+  };
+
   const handleDownload = () => {
     try {
       downloadEmailHTML(blocks, settings, emailName);
@@ -111,8 +197,11 @@ function App() {
           </button>
         </div>
 
-        <button className="btn" onClick={() => { setBlocks(seedBlocks()); setSelectedId(null); flash(lang === 'th' ? 'รีเซ็ตเป็นเทมเพลต' : 'Reset to template'); }}>
+        <button className="btn" onClick={handleResetToDefault} title={lang === 'th' ? 'โหลด default' : 'Load saved default'}>
           {I.reset} <Lbl en="Reset" th="รีเซ็ต" lang={lang} />
+        </button>
+        <button className="btn" onClick={handleSaveAsDefault} title={lang === 'th' ? 'บันทึก layout ปัจจุบัน' : 'Save current layout'}>
+          <Lbl en="Save" th="บันทึก" lang={lang} />
         </button>
         <button className="btn" onClick={handleDownload}>
           {I.download} HTML

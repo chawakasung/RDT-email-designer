@@ -11,7 +11,6 @@ export const BLOCK_LIBRARY = [
   { kind: 'gallery',   label: L('Image Gallery', 'แกลเลอรี'),            group: 'media' },
   { kind: 'video',     label: L('Video', 'วิดีโอ'),                      group: 'media' },
   { kind: 'podcast',   label: L('Podcast', 'พ็อดแคสต์'),                 group: 'media' },
-  { kind: 'language',  label: L('Language Switcher', 'ตัวเลือกภาษา'),    group: 'elements' },
   { kind: 'twocol',    label: L('Two Columns', 'สองคอลัมน์'),            group: 'layout' },
   { kind: 'threecol',  label: L('Three Columns', 'สามคอลัมน์'),          group: 'layout' },
   { kind: 'storylist', label: L('Story List', 'รายการเรื่อง'),           group: 'layout' },
@@ -48,12 +47,14 @@ export const DEFAULT_PROPS = {
   },
   text: {
     heading: 'Innovating for patients',
-    copy: 'We unite leading science and technology across diagnostics and pharmaceuticals to prevent, stop and cure diseases.\n\nOur pipeline continues to advance in areas of significant unmet need — and your work makes that possible.',
+    copy: 'We unite leading science and technology across diagnostics and pharmaceuticals to prevent, stop and cure diseases.\nOur pipeline continues to advance in areas of significant unmet need — and your work makes that possible.',
+    heading_size: 20, copy_size: 18,
     bg_color: '', bg_img: '', bg_scale: 100, bg_pos: 'center center',
   },
   letter: {
     html: '<p>Dear team,</p><p>This is a <strong>rich-text letter block</strong>. Use the toolbar to make text <em>italic</em>, <strong>bold</strong>, or <span style="color:#0066cc">colored</span>.</p><p>Sincerely,<br/>Roche Communications</p>',
     align: 'left',
+    font_size: 18,
   },
   image: {
     img: 'https://images.unsplash.com/photo-1581093588401-fbb62a02f120?w=1200&q=80',
@@ -111,6 +112,7 @@ export const DEFAULT_PROPS = {
   quote: {
     text: 'Our pipeline continues to advance in areas where patients face significant unmet need.',
     attrib: 'Thomas Schinecker, CEO', width: 100,
+    text_size: 28, attrib_size: 12,
   },
   video: {
     thumb: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=1200&q=80',
@@ -132,6 +134,8 @@ export const DEFAULT_PROPS = {
     address: 'F. Hoffmann-La Roche Ltd · Grenzacherstrasse 124 · 4070 Basel, Switzerland',
     links: 'Contact · Privacy notice · Unsubscribe',
     legal: 'You\'re receiving this because you opted in to Roche internal updates. © 2026 F. Hoffmann-La Roche Ltd.',
+    bg_color: '#f7f5f2',
+    text_color: '#706B69',
   },
 };
 
@@ -160,7 +164,9 @@ export const FIELDS = {
   ],
   text: [
     ['heading', L('Heading', 'หัวข้อ'), 'text'],
+    ['heading_size', L('Heading size', 'ขนาดหัวข้อ'), 'slider', { min: 14, max: 48, step: 1, suffix: 'px' }],
     ['copy', L('Body copy', 'เนื้อหา'), 'textarea'],
+    ['copy_size', L('Body size', 'ขนาดเนื้อหา'), 'slider', { min: 12, max: 32, step: 1, suffix: 'px' }],
     ['bg_color', L('Background color', 'สีพื้นหลัง'), 'swatches', [
       { value: '', label: 'None' },
       { value: '#FFFFFF', label: 'White' },
@@ -178,6 +184,7 @@ export const FIELDS = {
   ],
   letter: [
     ['align', L('Alignment', 'จัดวาง'), 'select', { options: [['left', 'Left'], ['center', 'Center'], ['right', 'Right']] }],
+    ['font_size', L('Font size', 'ขนาดตัวอักษร'), 'slider', { min: 12, max: 32, step: 1, suffix: 'px' }],
   ],
   image: [
     ['img', L('Image', 'รูป'), 'image'],
@@ -285,7 +292,9 @@ export const FIELDS = {
   ],
   quote: [
     ['text', L('Quote', 'ข้อความ'), 'textarea'],
+    ['text_size', L('Quote size', 'ขนาดคำพูด'), 'slider', { min: 16, max: 48, step: 1, suffix: 'px' }],
     ['attrib', L('Attribution', 'ผู้กล่าว'), 'text'],
+    ['attrib_size', L('Attribution size', 'ขนาดผู้กล่าว'), 'slider', { min: 10, max: 24, step: 1, suffix: 'px' }],
     ['width', L('Width', 'ความกว้าง'), 'slider', { min: 40, max: 100, step: 5, suffix: '%' }],
   ],
   video: [
@@ -309,8 +318,23 @@ export const FIELDS = {
   ],
   footer: [
     ['address', L('Address', 'ที่อยู่'), 'text'],
-    ['links', L('Links row', 'ลิงก์ส่วนท้าย'), 'text'],
     ['legal', L('Legal / disclaimer', 'ข้อความตามกฎหมาย'), 'textarea'],
+    ['bg_color', L('Background', 'สีพื้นหลัง'), 'swatches', [
+      { value: '#f7f5f2', label: 'Stone' },
+      { value: '#FFFFFF', label: 'White' },
+      { value: '#FFF7F5', label: 'Soft pink' },
+      { value: '#FFE8DE', label: 'Peach' },
+      { value: '#DBD6D1', label: 'Warm grey' },
+      { value: '#0B41CD', label: 'Roche blue' },
+      { value: '#022366', label: 'Dark blue' },
+      { value: '#1a1a1a', label: 'Black' },
+    ]],
+    ['text_color', L('Text color', 'สีตัวอักษร'), 'swatches', [
+      { value: '#706B69', label: 'Grey' },
+      { value: '#544F4F', label: 'Dark grey' },
+      { value: '#FFFFFF', label: 'White' },
+      { value: '#0B41CD', label: 'Roche blue' },
+    ]],
   ],
 };
 

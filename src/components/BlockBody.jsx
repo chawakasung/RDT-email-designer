@@ -38,18 +38,29 @@ export function BlockBody({ kind, props, brand, editing, onEdit, onCloseLetter }
           backgroundColor: bgColor || '#1a1a1a',
         } : {}),
       };
+      const headingSize = Number(props.heading_size) || 20;
+      const copySize = Number(props.copy_size) || 18;
       return (
         <div className="e-text" style={blockStyle}>
           {hasBgImg && <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.45)', pointerEvents:'none' }} />}
           <div style={{ position:'relative', color: textColor }}>
-            {props.heading && <h2 style={{ color: textColor }} {...ce('heading')}>{props.heading}</h2>}
-            <div {...ce('copy')}>{(props.copy || '').split(/\n\n+/).map((p, i) => <p key={i} style={{ color: textColor }}>{p}</p>)}</div>
+            {props.heading && <h2 style={{ color: textColor, fontSize: headingSize + 'px' }} {...ce('heading')}>{props.heading}</h2>}
+            {editing ? (
+              <div
+                {...ce('copy')}
+                style={{ color: textColor, fontSize: copySize + 'px', fontWeight: 300, whiteSpace: 'pre-wrap', lineHeight: 1.55, fontFamily: 'var(--font-roche)' }}
+              >{props.copy || ''}</div>
+            ) : (
+              <div>{(props.copy || '').split(/\n\n+/).map((p, i) => (
+                <p key={i} style={{ color: textColor, fontSize: copySize + 'px' }}>{p}</p>
+              ))}</div>
+            )}
           </div>
         </div>
       );
     }
     case 'letter': return (
-      <LetterBlock html={props.html} align={props.align} editing={editing} onEdit={onEdit} onClose={onCloseLetter} />
+      <LetterBlock html={props.html} align={props.align} fontSize={props.font_size} editing={editing} onEdit={onEdit} onClose={onCloseLetter} />
     );
     case 'image': return (
       <div className="e-image">
@@ -192,14 +203,18 @@ export function BlockBody({ kind, props, brand, editing, onEdit, onCloseLetter }
         </div>
       );
     }
-    case 'quote': return (
-      <div className="e-quote">
-        <div className="e-quote__inner" style={{ borderLeftColor: brand.primary, maxWidth: (props.width ?? 100) + '%', marginLeft: 'auto', marginRight: 'auto' }}>
-          <p {...ce('text')}>"{props.text}"</p>
-          {props.attrib && <cite {...ce('attrib')}>— {props.attrib}</cite>}
+    case 'quote': {
+      const qSize = Number(props.text_size) || 28;
+      const aSize = Number(props.attrib_size) || 12;
+      return (
+        <div className="e-quote">
+          <div className="e-quote__inner" style={{ borderLeftColor: brand.primary, maxWidth: (props.width ?? 100) + '%', marginLeft: 'auto', marginRight: 'auto' }}>
+            <p style={{ fontSize: qSize + 'px' }} {...ce('text')}>"{props.text}"</p>
+            {props.attrib && <cite style={{ fontSize: aSize + 'px' }} {...ce('attrib')}>— {props.attrib}</cite>}
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
     case 'video': return (
       <div className="e-video">
         <div className="e-video__frame">
@@ -211,14 +226,17 @@ export function BlockBody({ kind, props, brand, editing, onEdit, onCloseLetter }
     );
     case 'podcast': return <PodcastBlock props={props} brand={brand} ce={ce} />;
     case 'language': return <LanguageBlock props={props} brand={brand} ce={ce} />;
-    case 'footer': return (
-      <div className="e-footer">
-        <div className="e-footer__addr" {...ce('address')}>{props.address}</div>
-        <div className="e-footer__rule" />
-        <div {...ce('links')}>{props.links}</div>
-        <div className="e-footer__legal" {...ce('legal')}>{props.legal}</div>
-      </div>
-    );
+    case 'footer': {
+      const fbg = props.bg_color || '#f7f5f2';
+      const ftc = props.text_color || '#706B69';
+      return (
+        <div className="e-footer" style={{ background: fbg, color: ftc }}>
+          <div className="e-footer__addr" style={{ color: ftc }} {...ce('address')}>{props.address}</div>
+          <div className="e-footer__rule" />
+          <div className="e-footer__legal" style={{ color: ftc, opacity: 0.85 }} {...ce('legal')}>{props.legal}</div>
+        </div>
+      );
+    }
     default: return null;
   }
 }
@@ -358,7 +376,7 @@ function HeaderBlock({ props, editing, onEdit, ce }) {
 
 function StoryListBlock({ props, editing, brand, onEdit, ce }) {
   const count = Math.max(1, Math.min(6, Number(props.count) || 3));
-  const imgH = props.img_h || 160;
+  const defaultH = Number(props.img_h) || 160;
   const addRow = () => {
     const n = count + 1;
     if (n > 6) return;
@@ -376,16 +394,17 @@ function StoryListBlock({ props, editing, brand, onEdit, ce }) {
   const rows = [];
   for (let i = 1; i <= count; i++) {
     const k = 's' + i;
+    const rowH = Number(props[k + '_h']) || defaultH;
     rows.push(
       <Fragment key={i}>
         <div className="e-storylist__row">
           <EditableImage
             src={props[k + '_img']} editing={editing}
             onReplace={(v) => onEdit(k + '_img', v)}
-            widthPct={100} heightPx={imgH}
-            onResize={() => {}}
-            defaultHeight={imgH}
-            allowResize={false}
+            widthPct={100} heightPx={rowH}
+            onResize={(_w, h) => onEdit(k + '_h', h)}
+            defaultHeight={defaultH}
+            allowResize={true}
             className="e-storylist__img"
           />
           <div className="e-storylist__body">

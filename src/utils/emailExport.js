@@ -77,20 +77,23 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
       const bgColor = props.bg_color || '';
       const isDark = ['#0066CC', '#003366', '#1a1a1a', '#000000'].includes(bgColor);
       const textColor = isDark ? '#ffffff' : '#544F4F';
+      const headingSize = Number(props.heading_size) || 20;
+      const copySize = Number(props.copy_size) || 18;
       const paras = (props.copy || '').split(/\n\n+/).map(p =>
-        `<p style="font-family:Arial,sans-serif;font-weight:300;font-size:18px;line-height:1.55;color:${textColor};margin:0 0 12px;">${esc(p)}</p>`
+        `<p style="font-family:Arial,sans-serif;font-weight:300;font-size:${copySize}px;line-height:1.55;color:${textColor};margin:0 0 12px;">${esc(p)}</p>`
       ).join('');
       return `<table role="presentation" width="750" border="0" cellpadding="0" cellspacing="0"${bgColor ? ` bgcolor="${bgColor}" style="background-color:${bgColor};"` : ''}>
         <tr><td style="padding:24px 32px;">
-          ${heading ? `<h2 style="font-family:Arial,sans-serif;font-weight:400;font-size:20px;line-height:1.3;color:${textColor};margin:0 0 10px;">${heading}</h2>` : ''}
+          ${heading ? `<h2 style="font-family:Arial,sans-serif;font-weight:400;font-size:${headingSize}px;line-height:1.3;color:${textColor};margin:0 0 10px;">${heading}</h2>` : ''}
           ${paras}
         </td></tr>
       </table>`;
     }
 
     case 'letter': {
+      const fs = Number(props.font_size) || 18;
       return `<table role="presentation" width="750" border="0" cellpadding="0" cellspacing="0">
-        <tr><td style="padding:24px 32px;font-family:Arial,sans-serif;font-weight:300;font-size:18px;line-height:1.65;color:#544F4F;text-align:${props.align || 'left'};">
+        <tr><td style="padding:24px 32px;font-family:Arial,sans-serif;font-weight:300;font-size:${fs}px;line-height:1.65;color:#544F4F;text-align:${props.align || 'left'};">
           ${props.html || ''}
         </td></tr>
       </table>`;
@@ -170,7 +173,7 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
 
     case 'storylist': {
       const count = Math.max(1, Math.min(6, Number(props.count) || 3));
-      const imgH = Number(props.img_h) || 160;
+      const defaultH = Number(props.img_h) || 160;
       const rows = [];
       for (let i = 1; i <= count; i++) {
         const k = `s${i}`;
@@ -179,10 +182,11 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
         const copy = esc(props[`${k}_copy`] || '');
         const cta = esc(props[`${k}_cta`] || '');
         const href = esc(props[`${k}_href`] || '#');
+        const rowH = Number(props[`${k}_h`]) || defaultH;
         if (i > 1) rows.push(`<tr><td colspan="3" height="1" style="height:1px;background-color:rgba(10,16,32,0.12);padding:0;font-size:0;line-height:0;">&nbsp;</td></tr>`);
         rows.push(`<tr>
           <td width="200" valign="top" style="vertical-align:top;padding:20px 24px 20px 0;">
-            ${img ? `<img src="${img}" width="200" height="${imgH}" alt="" style="display:block;width:200px;height:${imgH}px;object-fit:cover;" />` : `<div style="width:200px;height:${imgH}px;background-color:#DBD6D1;">&nbsp;</div>`}
+            ${img ? `<img src="${img}" width="200" height="${rowH}" alt="" style="display:block;width:200px;height:${rowH}px;object-fit:cover;" />` : `<div style="width:200px;height:${rowH}px;background-color:#DBD6D1;">&nbsp;</div>`}
           </td>
           <td valign="top" style="vertical-align:top;padding:20px 0;">
             <h3 style="font-family:Arial,sans-serif;font-weight:300;font-size:22px;line-height:1.25;color:#544F4F;margin:0 0 8px;">${title}</h3>
@@ -286,6 +290,8 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
       const text = esc(props.text || '');
       const attrib = esc(props.attrib || '');
       const width = Number(props.width) || 100;
+      const qSize = Number(props.text_size) || 28;
+      const aSize = Number(props.attrib_size) || 12;
       const pxW = Math.round(686 * width / 100);
       return `<table role="presentation" width="750" border="0" cellpadding="0" cellspacing="0">
         <tr><td style="padding:24px 32px;">
@@ -293,8 +299,8 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
             <tr>
               <td width="2" bgcolor="${primary}" style="background-color:${primary};">&nbsp;</td>
               <td style="padding:0 0 0 18px;">
-                <p style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:300;font-size:26px;line-height:1.35;color:#544F4F;margin:0 0 14px;">&ldquo;${text}&rdquo;</p>
-                ${attrib ? `<p style="font-style:normal;font-family:Arial,sans-serif;font-size:12px;color:#706B69;margin:0;">&mdash; ${attrib}</p>` : ''}
+                <p style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:300;font-size:${qSize}px;line-height:1.35;color:#544F4F;margin:0 0 14px;">&ldquo;${text}&rdquo;</p>
+                ${attrib ? `<p style="font-style:normal;font-family:Arial,sans-serif;font-size:${aSize}px;color:#706B69;margin:0;">&mdash; ${attrib}</p>` : ''}
               </td>
             </tr>
           </table>
@@ -363,14 +369,14 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
 
     case 'footer': {
       const address = esc(props.address || '');
-      const links = esc(props.links || '');
       const legal = esc(props.legal || '');
-      return `<table role="presentation" width="750" border="0" cellpadding="0" cellspacing="0" bgcolor="#f7f5f2" style="background-color:#f7f5f2;border-top:1px solid rgba(10,16,32,0.12);">
+      const fbg = props.bg_color || '#f7f5f2';
+      const ftc = props.text_color || '#706B69';
+      return `<table role="presentation" width="750" border="0" cellpadding="0" cellspacing="0" bgcolor="${fbg}" style="background-color:${fbg};border-top:1px solid rgba(10,16,32,0.12);">
         <tr><td style="padding:24px 20px 28px;">
-          <p style="font-family:Arial,sans-serif;font-size:11px;color:#706B69;line-height:1.6;margin:0 0 12px;">${address}</p>
+          <p style="font-family:Arial,sans-serif;font-size:11px;color:${ftc};line-height:1.6;margin:0 0 12px;">${address}</p>
           <div style="height:1px;background-color:rgba(10,16,32,0.12);margin:12px 0;font-size:0;line-height:0;">&nbsp;</div>
-          <p style="font-family:Arial,sans-serif;font-size:11px;color:#706B69;line-height:1.6;margin:0 0 8px;">${links}</p>
-          <p style="font-family:Arial,sans-serif;font-size:10px;color:#706B69;margin:0;line-height:1.5;">${legal}</p>
+          <p style="font-family:Arial,sans-serif;font-size:10px;color:${ftc};margin:0;line-height:1.5;opacity:0.85;">${legal}</p>
         </td></tr>
       </table>`;
     }
