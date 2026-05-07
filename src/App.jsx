@@ -206,8 +206,17 @@ function App() {
         <button className="btn" onClick={handleDownload}>
           {I.download} HTML
         </button>
-        <button className="btn primary" onClick={() => setMode('test-modal')}>
-          {I.send} <Lbl en="Send test" th="ส่งทดสอบ" lang={lang} />
+        {import.meta.env.DEV && (
+          <button className="btn primary" onClick={() => setMode('test-modal')}>
+            {I.send} <Lbl en="Send test" th="ส่งทดสอบ" lang={lang} />
+          </button>
+        )}
+        <button
+          className="btn"
+          onClick={() => setMode('howto-modal')}
+          title={lang === 'th' ? 'วิธีส่ง email' : 'How to send'}
+        >
+          📧 <Lbl en="How to send" th="วิธีส่ง" lang={lang} />
         </button>
       </div>
 
@@ -247,8 +256,62 @@ function App() {
 
       {mode === 'preview-modal' && <PreviewModal blocks={blocks} settings={settings} onClose={() => setMode('edit')} lang={lang} />}
       {mode === 'test-modal' && <TestSendModal blocks={blocks} settings={settings} onClose={() => setMode('edit')} lang={lang} />}
+      {mode === 'howto-modal' && <HowToSendModal onClose={() => setMode('edit')} lang={lang} />}
 
       {toast && <div className="toast">{I.check}{toast}</div>}
+    </div>
+  );
+}
+
+function HowToSendModal({ onClose, lang }) {
+  const isTh = lang === 'th';
+  return (
+    <div className="modal-bg" onClick={onClose}>
+      <div className="modal" style={{ maxWidth: 560 }} onClick={(e) => e.stopPropagation()}>
+        <div className="modal__head">
+          <h3>{isTh ? 'วิธีส่ง Email Template' : 'How to send your email'}<small>{isTh ? '3 วิธีง่ายๆ' : '3 simple ways'}</small></h3>
+          <button className="close" onClick={onClose}>×</button>
+        </div>
+        <div className="modal__body" style={{ fontSize: 14, lineHeight: 1.6 }}>
+          <ol style={{ paddingLeft: 20, margin: 0 }}>
+            <li style={{ marginBottom: 18 }}>
+              <strong>{isTh ? 'ผ่าน Outlook (แนะนำ)' : 'Outlook (recommended)'}</strong>
+              <ol style={{ paddingLeft: 18, marginTop: 6 }}>
+                <li>{isTh ? 'กดปุ่ม HTML ด้านบน → ดาวน์โหลดไฟล์' : 'Click HTML button above → downloads file'}</li>
+                <li>{isTh ? 'เปิด Outlook → New Email' : 'Open Outlook → New Email'}</li>
+                <li>{isTh ? 'ลากไฟล์ HTML เข้าไปในกล่องข้อความ' : 'Drag the HTML file into the message body'}</li>
+                <li>{isTh ? 'ใส่ผู้รับ → Send' : 'Add recipients → Send'}</li>
+              </ol>
+            </li>
+            <li style={{ marginBottom: 18 }}>
+              <strong>{isTh ? 'ผ่าน Gmail' : 'Gmail'}</strong>
+              <ol style={{ paddingLeft: 18, marginTop: 6 }}>
+                <li>{isTh ? 'กด HTML → เปิดไฟล์ใน Chrome' : 'Click HTML → open the file in Chrome'}</li>
+                <li>{isTh ? 'กด Cmd+A เลือกทั้งหมด → Cmd+C' : 'Cmd+A select all → Cmd+C copy'}</li>
+                <li>{isTh ? 'ไปที่ Gmail → Compose → Cmd+V paste' : 'Go to Gmail → Compose → Cmd+V paste'}</li>
+                <li>{isTh ? 'ใส่ subject + ผู้รับ → Send' : 'Add subject + recipients → Send'}</li>
+              </ol>
+            </li>
+            <li>
+              <strong>{isTh ? 'พรีวิวก่อนส่ง' : 'Preview before sending'}</strong>
+              <p style={{ margin: '6px 0 0', color: 'var(--fg-2)' }}>
+                {isTh
+                  ? 'กด Preview ด้านบน หรือเปิดไฟล์ HTML ใน browser เพื่อดูผลก่อน'
+                  : 'Click Preview above, or open the HTML file in a browser to verify how it looks'}
+              </p>
+            </li>
+          </ol>
+          <div style={{ marginTop: 20, padding: 12, background: 'rgba(11,65,205,.04)', borderLeft: '2px solid var(--roche-blue)', fontSize: 13, color: 'var(--fg-2)' }}>
+            💡 {isTh
+              ? 'ใช้ Outlook ของบริษัทส่ง — email จะดูเป็นทางการ มาจาก @roche.com ของคุณ'
+              : "Sending from your company Outlook — email looks official, comes from your @roche.com"}
+          </div>
+        </div>
+        <div className="modal__foot">
+          <span style={{ flex: 1 }} />
+          <button className="btn primary" onClick={onClose}>{isTh ? 'เข้าใจแล้ว' : 'Got it'}</button>
+        </div>
+      </div>
     </div>
   );
 }
