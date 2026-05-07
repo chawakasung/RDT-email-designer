@@ -39,9 +39,14 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
       const imgX = props.imgX != null ? props.imgX : 50;
       const imgY = props.imgY != null ? props.imgY : 50;
 
+      // Logo อยู่ซ้ายมุมบน + ตัวหนังสือเลื่อนขวา (เหมือน editor preview)
       const leftTd = `<td class="banner-cell banner-cell--text" width="410" bgcolor="${bg}" valign="middle" style="width:410px;height:205px;background-color:${bg};padding:24px 20px;vertical-align:middle;">
-        ${showLogo ? `<table border="0" cellpadding="0" cellspacing="0"><tr><td style="padding:0 0 10px;">${rocheLogoImg(flipped)}</td></tr></table>` : ''}
-        <p style="font-family:Arial,Helvetica,sans-serif;font-weight:300;font-size:${fs}px;line-height:1.1;color:#000000;margin:0;letter-spacing:-0.01em;">${headline}</p>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+          ${showLogo ? `<td valign="top" width="100" style="width:100px;vertical-align:top;padding:0;">${rocheLogoImg(flipped)}</td>` : ''}
+          <td valign="middle" style="vertical-align:middle;padding:0;">
+            <p style="font-family:Arial,Helvetica,sans-serif;font-weight:300;font-size:${fs}px;line-height:1.1;color:#000000;margin:0;letter-spacing:-0.01em;">${headline}</p>
+          </td>
+        </tr></table>
       </td>`;
 
       const rightTd = img
@@ -366,10 +371,10 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
         <tr><td style="padding:16px 32px;">
           <table border="0" cellpadding="0" cellspacing="0" width="686" bgcolor="#FFF7F5" style="border:1px solid rgba(10,16,32,0.12);background-color:#FFF7F5;">
             <tr>
-              <td width="140" style="padding:16px;vertical-align:top;">
+              <td class="stack-column" width="140" style="padding:16px;vertical-align:top;">
                 ${artwork ? `<img src="${artwork}" width="140" height="140" alt="Podcast artwork" style="display:block;width:140px;height:140px;object-fit:cover;" />` : `<div style="width:140px;height:140px;background:linear-gradient(135deg,#1a3a8a,#0b2154);">&nbsp;</div>`}
               </td>
-              <td style="padding:16px 16px 16px 0;vertical-align:top;">
+              <td class="stack-column" style="padding:16px 16px 16px 0;vertical-align:top;">
                 <p style="font-family:Arial,sans-serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#706B69;font-weight:600;margin:0 0 4px;">${show}</p>
                 <p style="font-family:Arial,sans-serif;font-size:16px;font-weight:600;color:#544F4F;margin:0 0 4px;line-height:1.3;">${episode}</p>
                 <p style="font-family:Arial,sans-serif;font-size:12px;color:#706B69;margin:0 0 16px;">${host}</p>
@@ -440,7 +445,7 @@ export function generateEmailHTML(blocks, settings) {
   table { border-collapse: collapse; }
   img { border: 0; display: block; -ms-interpolation-mode: bicubic; }
   a { color: ${primary}; }
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 768px) {
     .email-container { width: 100% !important; min-width: 100% !important; }
     .stack-column { display: block !important; width: 100% !important; padding: 0 !important; margin: 0 0 16px !important; box-sizing: border-box !important; }
     img { max-width: 100% !important; height: auto !important; }
