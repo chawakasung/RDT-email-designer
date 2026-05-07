@@ -199,6 +199,13 @@ button { font-family: inherit; }
 .device-shell.mobile .e-3col { grid-template-columns: 1fr; gap: 24px; }
 .device-shell.mobile .e-storylist__row { grid-template-columns: 1fr; gap: 12px; }
 .device-shell.mobile .e-gallery2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+
+/* Mobile: stack podcast card */
+.device-shell.mobile .e-podcast__card { grid-template-columns: 1fr; gap: 12px; }
+.device-shell.mobile .e-podcast__art { max-width: 180px; margin: 0 auto; }
+.device-shell.mobile .e-podcast__waveform { display: none; }
+.device-shell.mobile .e-podcast__player { grid-template-columns: 36px 1fr; }
+.device-shell.mobile .e-podcast__episode { font-size: 15px; line-height: 1.35; }
 .e-col__item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; margin-bottom: 10px; background: var(--grey-4); }
 .e-col__item h3 { font-family: var(--font-roche); font-size: 24px; font-weight: 300; color: var(--fg-1); margin: 0 0 8px; line-height: 1.2; letter-spacing: -.01em; }
 .e-col__item p { font-family: var(--font-roche); font-weight: 300; font-size: 18px; line-height: 1.5; color: var(--fg-1); margin: 0 0 8px; }
