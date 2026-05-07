@@ -85,18 +85,30 @@ function App() {
 
   function flash(msg) { setToast(msg); setTimeout(() => setToast(null), 2000); }
 
+  // Pin footer ที่ล่างเสมอ — footer ทั้งหมดจะถูกย้ายไปท้าย array
+  const pinFooter = (bs) => {
+    const footers = bs.filter(b => b.kind === 'footer');
+    const others = bs.filter(b => b.kind !== 'footer');
+    return [...others, ...footers];
+  };
+
   const addBlock = useCallback((kind, atIndex) => {
     const b = newBlock(kind);
     setBlocks(bs => {
-      if (atIndex == null) return [...bs, b];
-      const copy = bs.slice(); copy.splice(atIndex, 0, b); return copy;
+      let next;
+      if (atIndex == null) {
+        next = [...bs, b];
+      } else {
+        const copy = bs.slice(); copy.splice(atIndex, 0, b); next = copy;
+      }
+      return pinFooter(next);
     });
     setSelectedId(b.id);
     flash((lang === 'th' ? 'เพิ่ม ' : 'Added ') + blockLabel(kind).en);
   }, [lang]);
 
   const deleteBlock = (id) => {
-    setBlocks(bs => bs.filter(b => b.id !== id));
+    setBlocks(bs => pinFooter(bs.filter(b => b.id !== id)));
     if (selectedId === id) setSelectedId(null);
   };
 
@@ -107,16 +119,18 @@ function App() {
     const dup = newBlock(bs[i].kind);
     dup.props = structuredClone(bs[i].props);
     copy.splice(i + 1, 0, dup);
-    return copy;
+    return pinFooter(copy);
   });
 
   const moveBlock = (id, delta) => setBlocks(bs => {
     const i = bs.findIndex(b => b.id === id);
     const j = i + delta;
     if (i < 0 || j < 0 || j >= bs.length) return bs;
+    // ห้ามย้าย footer ออกจากตำแหน่ง
+    if (bs[i].kind === 'footer') return bs;
     const cp = bs.slice();
     [cp[i], cp[j]] = [cp[j], cp[i]];
-    return cp;
+    return pinFooter(cp);
   });
 
   const updateBlock = useCallback((id, key, value) => {
