@@ -193,6 +193,12 @@ button { font-family: inherit; }
 .e-2col, .e-3col { display: grid; gap: 18px; padding: 24px 32px; }
 .e-2col { grid-template-columns: 1fr 1fr; }
 .e-3col { grid-template-columns: 1fr 1fr 1fr; }
+
+/* Mobile preview: stack columns vertically */
+.device-shell.mobile .e-2col,
+.device-shell.mobile .e-3col { grid-template-columns: 1fr; gap: 24px; }
+.device-shell.mobile .e-storylist__row { grid-template-columns: 1fr; gap: 12px; }
+.device-shell.mobile .e-gallery2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 .e-col__item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; margin-bottom: 10px; background: var(--grey-4); }
 .e-col__item h3 { font-family: var(--font-roche); font-size: 24px; font-weight: 300; color: var(--fg-1); margin: 0 0 8px; line-height: 1.2; letter-spacing: -.01em; }
 .e-col__item p { font-family: var(--font-roche); font-weight: 300; font-size: 18px; line-height: 1.5; color: var(--fg-1); margin: 0 0 8px; }
