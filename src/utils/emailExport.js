@@ -112,17 +112,43 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
     }
 
     case 'gallery': {
-      const imgs = ['img1', 'img2', 'img3'];
-      const cells = imgs.map((k, i) => {
-        const src = props[k] || '';
-        const h = Number(props[`${k}_h`]) || 140;
-        return src
-          ? `<td class="stack-column" width="228" style="padding:0 3px;"><img class="col-img" src="${src}" width="228" height="${h}" alt="" style="display:block;width:228px;height:${h}px;object-fit:cover;" /></td>`
-          : `<td class="stack-column" width="228" style="padding:0 3px;background-color:#DBD6D1;height:${h}px;">&nbsp;</td>`;
-      });
+      // Render grid เป็นแถวๆ — pack รูปเข้าแถวเมื่อ colSpan รวมเกิน cols
+      const cols = Math.max(3, Math.min(8, Number(props.cols) || 6));
+      const cellSize = Math.max(40, Number(props.cellSize) || 80);
+      const gap = Number(props.gap) ?? 6;
+      const items = (Array.isArray(props.items) ? props.items : []).filter(it => it.src);
+      const innerW = 750 - 64; // padding 32 each side
+      const cellW = (innerW - gap * (cols - 1)) / cols;
+
+      // แบ่งเป็นแถวอย่างง่าย: pack รูปต่อแถวจนเต็ม cols
+      const rows = [];
+      let cur = [], curCols = 0;
+      for (const it of items) {
+        const cs = Math.max(1, Math.min(cols, Number(it.colSpan) || 1));
+        const rs = Math.max(1, Number(it.rowSpan) || 1);
+        if (curCols + cs > cols) {
+          if (cur.length) rows.push(cur);
+          cur = []; curCols = 0;
+        }
+        cur.push({ src: it.src, cs, rs });
+        curCols += cs;
+      }
+      if (cur.length) rows.push(cur);
+
+      const rowsHtml = rows.map((row, i) => {
+        const cells = row.map(({ src, cs, rs }) => {
+          const w = Math.round(cellW * cs + gap * (cs - 1));
+          const h = Math.round(cellSize * rs + gap * (rs - 1));
+          return `<td valign="top" width="${w}" style="padding:0;width:${w}px;">
+            <img src="${src}" width="${w}" height="${h}" alt="" style="display:block;width:${w}px;height:${h}px;object-fit:cover;" />
+          </td>`;
+        }).join(`<td width="${gap}" style="width:${gap}px;font-size:0;line-height:0;">&nbsp;</td>`);
+        return `<tr>${cells}</tr>${i < rows.length - 1 ? `<tr><td colspan="99" height="${gap}" style="height:${gap}px;font-size:0;line-height:0;">&nbsp;</td></tr>` : ''}`;
+      }).join('');
+
       return `<table role="presentation" width="750" border="0" cellpadding="0" cellspacing="0">
         <tr><td style="padding:20px 32px;">
-          <table border="0" cellpadding="0" cellspacing="0"><tr>${cells.join('')}</tr></table>
+          <table border="0" cellpadding="0" cellspacing="0" width="100%">${rowsHtml}</table>
         </td></tr>
       </table>`;
     }

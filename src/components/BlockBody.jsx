@@ -68,13 +68,7 @@ export function BlockBody({ kind, props, brand, editing, onEdit, onCloseLetter }
         {props.caption && <div className="e-image__cap" {...ce('caption')}>{props.caption}</div>}
       </div>
     );
-    case 'gallery': return (
-      <div className="e-gallery">
-        {['img1','img2','img3'].map(k => (
-          <EditableImage key={k} src={props[k]} editing={editing} onReplace={v => onEdit(k, v)} widthPct={100} heightPx={props[k+'_h']} onResize={(_w,h) => onEdit(k+'_h', h)} defaultHeight={140} />
-        ))}
-      </div>
-    );
+    case 'gallery': return <GalleryBlock props={props} editing={editing} onEdit={onEdit} />;
     case 'twocol': return (
       <div className="e-2col">
         {['a','b'].map(k => (
@@ -370,6 +364,170 @@ function HeaderBlock({ props, editing, onEdit, ce }) {
           {flipped ? leftPanel : rightPanel}
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── Image Gallery (responsive grid + drag-resize) ─────────────────────
+function GalleryBlock({ props, editing, onEdit }) {
+  const cols = Math.max(3, Math.min(8, Number(props.cols) || 6));
+  const cellSize = Math.max(40, Number(props.cellSize) || 80);
+  const gap = Number(props.gap) ?? 6;
+  const items = Array.isArray(props.items) ? props.items : [];
+
+  const updateItems = (next) => onEdit('items', next);
+  const updateItem = (id, patch) => updateItems(items.map(it => it.id === id ? { ...it, ...patch } : it));
+  const removeItem = (id) => updateItems(items.filter(it => it.id !== id));
+  const addItem = () => updateItems([...items, {
+    id: 'g' + Math.random().toString(36).slice(2, 7),
+    src: '', colSpan: 1, rowSpan: 1,
+  }]);
+
+  const onPickImage = (id) => {
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.onchange = (ev) => {
+      const f = ev.target.files?.[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = () => updateItem(id, { src: r.result });
+      r.readAsDataURL(f);
+    };
+    inp.click();
+  };
+
+  const onResizeStart = (e, id, item) => {
+    if (!editing) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const startPt = e.touches ? e.touches[0] : e;
+    const startX = startPt.clientX, startY = startPt.clientY;
+    const startCol = item.colSpan, startRow = item.rowSpan;
+    const step = cellSize + gap;
+    const move = (ev) => {
+      const pt = ev.touches ? ev.touches[0] : ev;
+      const dx = pt.clientX - startX;
+      const dy = pt.clientY - startY;
+      const nc = Math.max(1, Math.min(cols, startCol + Math.round(dx / step)));
+      const nr = Math.max(1, Math.min(8, startRow + Math.round(dy / step)));
+      updateItem(id, { colSpan: nc, rowSpan: nr });
+      if (ev.preventDefault) ev.preventDefault();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move);
+      window.removeEventListener('touchend', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('touchend', up);
+  };
+
+  // hidden จนกว่าจะมีรูป — preview mode ไม่แสดง slot ว่าง
+  const visibleItems = editing ? items : items.filter(it => it.src);
+
+  return (
+    <div className="e-gallery2" style={{
+      display: 'grid',
+      gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+      gridAutoRows: cellSize + 'px',
+      gap: gap + 'px',
+      padding: '20px 32px',
+    }}>
+      {visibleItems.map(it => {
+        const cs = Math.max(1, Math.min(cols, Number(it.colSpan) || 1));
+        const rs = Math.max(1, Number(it.rowSpan) || 1);
+        return (
+          <div
+            key={it.id}
+            style={{
+              gridColumn: `span ${cs}`,
+              gridRow: `span ${rs}`,
+              position: 'relative',
+              background: it.src ? 'transparent' : '#f0ebe2',
+              border: it.src ? 'none' : '1px dashed rgba(10,16,32,0.18)',
+              cursor: editing && !it.src ? 'pointer' : 'default',
+              overflow: 'hidden',
+            }}
+            onClick={() => editing && !it.src && onPickImage(it.id)}
+          >
+            {it.src ? (
+              <img
+                src={it.src} alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            ) : editing ? (
+              <div style={{
+                width: '100%', height: '100%', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', color: 'var(--fg-3)', fontSize: 11, gap: 4
+              }}>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6">
+                  <rect x="3" y="3" width="18" height="18" rx="1"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <path d="M21 15l-5-5L5 21"/>
+                </svg>
+              </div>
+            ) : null}
+
+            {editing && it.src && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onPickImage(it.id); }}
+                onMouseDown={(e) => e.stopPropagation()}
+                style={{
+                  position: 'absolute', top: 6, right: 6,
+                  background: 'rgba(0,0,0,.55)', color: '#fff',
+                  border: 0, padding: '4px 8px', fontSize: 10, cursor: 'pointer', borderRadius: 3,
+                }}
+              >⇄</button>
+            )}
+
+            {editing && (
+              <button
+                onClick={(e) => { e.stopPropagation(); removeItem(it.id); }}
+                onMouseDown={(e) => e.stopPropagation()}
+                style={{
+                  position: 'absolute', top: 6, left: 6,
+                  background: 'rgba(180,0,0,.7)', color: '#fff',
+                  border: 0, width: 22, height: 22, fontSize: 14, cursor: 'pointer', borderRadius: 3,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+                title="Delete"
+              >×</button>
+            )}
+
+            {editing && (
+              <div
+                onMouseDown={(e) => onResizeStart(e, it.id, { colSpan: cs, rowSpan: rs })}
+                onTouchStart={(e) => onResizeStart(e, it.id, { colSpan: cs, rowSpan: rs })}
+                style={{
+                  position: 'absolute', right: 0, bottom: 0,
+                  width: 18, height: 18, background: 'var(--roche-blue)', color: '#fff',
+                  cursor: 'nwse-resize', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 10,
+                }}
+                title="Drag to resize"
+              >⌟</div>
+            )}
+          </div>
+        );
+      })}
+
+      {editing && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); addItem(); }}
+          style={{
+            gridColumn: 'span 1', gridRow: 'span 1',
+            border: '1.5px dashed var(--roche-blue)', background: 'rgba(11,65,205,0.04)',
+            color: 'var(--roche-blue)', cursor: 'pointer', fontSize: 22, lineHeight: 1,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+          title="Add image"
+        >+</button>
+      )}
     </div>
   );
 }

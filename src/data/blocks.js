@@ -61,10 +61,15 @@ export const DEFAULT_PROPS = {
     caption: 'Roche Penzberg · April 2026', img_w: 100, img_h: 260,
   },
   gallery: {
-    img1: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80',
-    img2: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80',
-    img3: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=600&q=80',
-    img1_h: 140, img2_h: 140, img3_h: 140,
+    cols: 6,
+    cellSize: 80, // px ต่อ cell ที่ฐาน
+    gap: 6,
+    items: [
+      { id: 'g1', src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=80', colSpan: 3, rowSpan: 2 },
+      { id: 'g2', src: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80', colSpan: 1, rowSpan: 1 },
+      { id: 'g3', src: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=600&q=80', colSpan: 1, rowSpan: 1 },
+      { id: 'g4', src: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80', colSpan: 1, rowSpan: 1 },
+    ],
   },
   twocol: {
     a_img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80',
@@ -193,12 +198,9 @@ export const FIELDS = {
     ['caption', L('Caption', 'คำบรรยาย'), 'text'],
   ],
   gallery: [
-    ['img1', L('Image 1', 'รูป 1'), 'image'],
-    ['img1_h', L('Image 1 height', 'ความสูง 1'), 'slider', { min: 80, max: 400, step: 10, suffix: 'px' }],
-    ['img2', L('Image 2', 'รูป 2'), 'image'],
-    ['img2_h', L('Image 2 height', 'ความสูง 2'), 'slider', { min: 80, max: 400, step: 10, suffix: 'px' }],
-    ['img3', L('Image 3', 'รูป 3'), 'image'],
-    ['img3_h', L('Image 3 height', 'ความสูง 3'), 'slider', { min: 80, max: 400, step: 10, suffix: 'px' }],
+    ['cols', L('Columns', 'จำนวนคอลัมน์'), 'slider', { min: 3, max: 8, step: 1, suffix: '' }],
+    ['cellSize', L('Cell size', 'ขนาดช่อง'), 'slider', { min: 60, max: 140, step: 5, suffix: 'px' }],
+    ['gap', L('Gap', 'ช่องว่าง'), 'slider', { min: 0, max: 16, step: 1, suffix: 'px' }],
   ],
   twocol: [
     ['a_title', L('Card 1 title', 'หัวข้อ 1'), 'text'],
