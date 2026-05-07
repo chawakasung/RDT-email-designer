@@ -383,6 +383,18 @@ function GalleryBlock({ props, editing, onEdit }) {
     src: '', colSpan: 1, rowSpan: 1,
   }]);
 
+  // Preset layouts — สำหรับคนที่มีรูปน้อย
+  const applyPreset = (n) => {
+    const span = Math.floor(cols / n);
+    const newItems = Array.from({ length: n }, (_, i) => ({
+      id: 'g' + Math.random().toString(36).slice(2, 7),
+      src: '',
+      colSpan: span,
+      rowSpan: 2,
+    }));
+    updateItems(newItems);
+  };
+
   const onPickImage = (id) => {
     const inp = document.createElement('input');
     inp.type = 'file';
@@ -430,6 +442,35 @@ function GalleryBlock({ props, editing, onEdit }) {
   const visibleItems = editing ? items : items.filter(it => it.src);
 
   return (
+    <div>
+      {editing && (
+        <div style={{
+          display: 'flex', gap: 8, padding: '12px 32px 0',
+          alignItems: 'center', flexWrap: 'wrap',
+        }}>
+          <span style={{ fontSize: 11, color: 'var(--fg-3)', textTransform: 'uppercase', letterSpacing: '.06em' }}>
+            Quick layout:
+          </span>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); applyPreset(2); }}
+            style={{
+              background: 'var(--roche-blue)', color: '#fff', border: 0,
+              padding: '6px 14px', fontSize: 12, fontWeight: 500,
+              borderRadius: 3, cursor: 'pointer',
+            }}
+          >▢ ▢  2 images</button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); applyPreset(3); }}
+            style={{
+              background: 'var(--roche-blue)', color: '#fff', border: 0,
+              padding: '6px 14px', fontSize: 12, fontWeight: 500,
+              borderRadius: 3, cursor: 'pointer',
+            }}
+          >▢ ▢ ▢  3 images</button>
+        </div>
+      )}
     <div className="e-gallery2" style={{
       display: 'grid',
       gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
@@ -528,6 +569,7 @@ function GalleryBlock({ props, editing, onEdit }) {
           title="Add image"
         >+</button>
       )}
+    </div>
     </div>
   );
 }
