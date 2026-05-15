@@ -85,9 +85,9 @@ export const DEFAULT_PROPS = {
   },
   storylist: {
     count: 3,
-    s1_img: '', s1_title: 'Q1 2026 results', s1_copy: 'Strong sales growth of +6% at constant exchange rates this quarter.', s1_cta: 'Read more →', s1_href: 'https://roche.com',
-    s2_img: '', s2_title: 'Annual Report 2025', s2_copy: 'Combined strengths in Diagnostics and Pharmaceuticals delivered real progress.', s2_cta: 'Read more →', s2_href: 'https://roche.com',
-    s3_img: '', s3_title: 'People & Culture update', s3_copy: 'Reaching more communities and colleagues than ever before.', s3_cta: 'Read more →', s3_href: 'https://roche.com',
+    s1_img: '/samples/sample-14.webp', s1_title: 'Q1 2026 results', s1_copy: 'Strong sales growth of +6% at constant exchange rates this quarter.', s1_cta: 'Read more →', s1_href: 'https://roche.com',
+    s2_img: '/samples/sample-02.webp', s2_title: 'Annual Report 2025', s2_copy: 'Combined strengths in Diagnostics and Pharmaceuticals delivered real progress.', s2_cta: 'Read more →', s2_href: 'https://roche.com',
+    s3_img: '/samples/sample-16.webp', s3_title: 'People & Culture update', s3_copy: 'Reaching more communities and colleagues than ever before.', s3_cta: 'Read more →', s3_href: 'https://roche.com',
     img_h: 160,
   },
   button: { label: 'Read more', href: 'https://roche.com', align: 'center' },
