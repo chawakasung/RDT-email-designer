@@ -42,7 +42,7 @@ export const DEFAULT_PROPS = {
     title: 'Hi {{first_name}}, here\'s what\'s next at Roche',
     copy: 'A look at the science, the partnerships and the people driving us forward this quarter.',
     cta: 'Read full update',
-    img: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1200&q=80',
+    img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&q=80',
     img_h: 300,
   },
   text: {
@@ -65,22 +65,22 @@ export const DEFAULT_PROPS = {
     cellSize: 80, // px ต่อ cell ที่ฐาน
     gap: 6,
     items: [
-      { id: 'g1', src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=80', colSpan: 3, rowSpan: 2 },
-      { id: 'g2', src: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80', colSpan: 1, rowSpan: 1 },
-      { id: 'g3', src: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=600&q=80', colSpan: 1, rowSpan: 1 },
-      { id: 'g4', src: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80', colSpan: 1, rowSpan: 1 },
+      { id: 'g1', src: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=900&q=80', colSpan: 3, rowSpan: 2 },
+      { id: 'g2', src: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600&q=80', colSpan: 1, rowSpan: 1 },
+      { id: 'g3', src: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=600&q=80', colSpan: 1, rowSpan: 1 },
+      { id: 'g4', src: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=600&q=80', colSpan: 1, rowSpan: 1 },
     ],
   },
   twocol: {
-    a_img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80',
+    a_img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80',
     a_title: 'Annual Report 2025', a_copy: 'Combined strengths in Diagnostics and Pharmaceuticals delivered real progress.', a_cta: 'Read more →', a_href: 'https://roche.com', a_img_h: 140,
-    b_img: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=600&q=80',
+    b_img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80',
     b_title: 'Q1 2026 results', b_copy: 'Strong sales growth of +6% at constant exchange rates this quarter.', b_cta: 'Investor briefing →', b_href: 'https://roche.com', b_img_h: 140,
   },
   threecol: {
-    a_img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80', a_title: 'Pipeline', a_copy: '28 approved medicines in 2025.', a_cta: 'Learn more →', a_href: 'https://roche.com',
-    b_img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80', b_title: 'People', b_copy: '100k+ Roche colleagues worldwide.', b_cta: 'Learn more →', b_href: 'https://roche.com',
-    c_img: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80', c_title: 'Patients', c_copy: 'Reaching more communities than ever.', c_cta: 'Learn more →', c_href: 'https://roche.com',
+    a_img: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600&q=80', a_title: 'Pipeline', a_copy: '28 approved medicines in 2025.', a_cta: 'Learn more →', a_href: 'https://roche.com',
+    b_img: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=600&q=80', b_title: 'People', b_copy: '100k+ Roche colleagues worldwide.', b_cta: 'Learn more →', b_href: 'https://roche.com',
+    c_img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&q=80', c_title: 'Patients', c_copy: 'Reaching more communities than ever.', c_cta: 'Learn more →', c_href: 'https://roche.com',
     img_h: 110,
   },
   storylist: {
@@ -99,12 +99,12 @@ export const DEFAULT_PROPS = {
     linkHref: 'https://roche.com',
   },
   webinar: {
-    bannerImg: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80',
+    bannerImg: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80',
     bannerH: 280,
     bodyBg: '#FFFFFF',
     title: 'World TB Day 2026: Connecting Clinical Innovation and the Patient Journey',
     description: 'Tuberculosis (TB) remains one of the world\'s deadliest infectious threats, claiming over 1.2 million lives annually. While the pace of innovation has been increasing, significant gaps in the care cascade persist. As we commemorate World TB Day 2026, we invite you to join us for a comprehensive one-hour webinar connecting high-level clinical research with patient advocacy.',
-    speakerImg: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&q=80',
+    speakerImg: 'https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?w=400&q=80',
     speakerSize: 160,
     speakerName: 'Prof. Dr. Christoph Lange',
     speakerInfo: 'Medical Director of the Research Center Borstel, Leibniz Lung Center in Borstel, Germany; Professor of Respiratory Medicine and International Health, University of Lübeck, Germany; German Center for Infection Research (DZIF)',
@@ -120,7 +120,7 @@ export const DEFAULT_PROPS = {
     text_size: 28, attrib_size: 12,
   },
   video: {
-    thumb: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=1200&q=80',
+    thumb: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=1200&q=80',
     href: 'https://roche.com/video', caption: 'Watch · 2 min — Behind the science of Itovebi',
   },
   podcast: {
