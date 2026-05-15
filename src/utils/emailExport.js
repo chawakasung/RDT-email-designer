@@ -44,7 +44,7 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
         <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
           ${showLogo ? `<td valign="top" width="100" style="width:100px;vertical-align:top;padding:0;">${rocheLogoImg(flipped)}</td>` : ''}
           <td valign="middle" style="vertical-align:middle;padding:0;">
-            <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:200;font-size:${fs}px;line-height:1.1;color:#000000;margin:0;letter-spacing:-0.01em;">${headline}</p>
+            <p class="banner-headline" style="font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:100;font-size:${fs}px;line-height:1.1;color:#000000;margin:0;letter-spacing:-0.01em;">${headline}</p>
           </td>
         </tr></table>
       </td>`;
@@ -451,8 +451,15 @@ export function generateEmailHTML(blocks, settings) {
 <!--[if mso]>
 <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
 <![endif]-->
+<!--[if !mso]><!-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap" rel="stylesheet">
+<!--<![endif]-->
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap');
   body { margin: 0; padding: 0; background-color: #f5f5f2; font-family: Arial, Helvetica, sans-serif; }
+  .banner-headline { font-family: 'Inter','Helvetica Neue',Helvetica,Arial,sans-serif !important; font-weight: 100 !important; }
   table { border-collapse: collapse; }
   img { border: 0; display: block; -ms-interpolation-mode: bicubic; }
   a { color: ${primary}; }
