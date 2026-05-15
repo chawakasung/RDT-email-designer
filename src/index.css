@@ -58,7 +58,7 @@ button { font-family: inherit; }
 
 /* ===== CENTER CANVAS ===== */
 .canvas-wrap { overflow: auto; padding: 28px 24px 80px; display: flex; justify-content: center; align-items: flex-start; background: var(--grey-5); }
-.device-shell { width: 100%; max-width: 100%; flex-shrink: 0; }
+.device-shell { width: 750px; max-width: 750px; flex-shrink: 0; }
 .device-shell.mobile { width: 380px; max-width: 380px; }
 .device { background: #fff; box-shadow: 0 4px 20px rgba(10,16,32,.06); border: 1px solid var(--hairline); }
 .device__chrome { padding: 9px 16px; background: #f1efeb; font-size: 12px; color: var(--fg-3); display: flex; gap: 12px; align-items: center; border-bottom: 1px solid var(--hairline); }
