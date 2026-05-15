@@ -279,7 +279,7 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
       return `<table role="presentation" width="750" border="0" cellpadding="0" cellspacing="0">
         <tr><td align="right" style="padding:8px 32px 0;text-align:right;">
           <p class="notice-text" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-style:italic;color:#706B69;margin:0 0 6px;text-align:right;">${note}</p>
-          <p class="notice-text" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${primary};margin:0;text-align:right;"><a href="${linkHref}" style="color:${primary};text-decoration:underline;">${linkText}</a></p>
+          <p class="notice-text" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${primary};margin:0;text-align:right;"><a href="${linkHref}" style="color:${primary};text-decoration:none;">${linkText}</a></p>
         </td></tr>
       </table>`;
     }
@@ -407,7 +407,7 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
           <p style="font-family:Arial,sans-serif;font-size:12px;font-style:italic;color:#706B69;margin:0 0 4px;">${note}</p>
           <p style="font-family:Arial,sans-serif;font-size:13px;color:#544F4F;margin:0 0 6px;">${prompt}</p>
           <p style="font-family:Arial,sans-serif;font-size:13px;color:#544F4F;margin:0;">
-            ${examples} ${langs.map((l, i) => (i > 0 ? '<span style="margin:0 6px;color:#706B69;">/</span>' : '') + `<a href="#" style="color:${primary};text-decoration:underline;">${l}</a>`).join('')}
+            ${examples} ${langs.map((l, i) => (i > 0 ? '<span style="margin:0 6px;color:#706B69;">/</span>' : '') + `<a href="#" style="color:${primary};text-decoration:none;">${l}</a>`).join('')}
           </p>
         </td></tr>
       </table>`;
