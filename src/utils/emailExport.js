@@ -50,7 +50,18 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
       </td>`;
 
       const rightTd = img
-        ? `<td class="banner-cell banner-cell--img" width="340" valign="middle" bgcolor="#d8d5d0" style="width:340px;height:205px;background-color:#d8d5d0;padding:0;font-size:0;line-height:0;"><img class="banner-img" src="${img}" width="340" height="205" alt="" style="display:block;border:0;outline:none;text-decoration:none;width:340px;height:205px;object-fit:cover;object-position:${imgX}% ${imgY}%;" /></td>`
+        ? `<td class="banner-cell banner-cell--img" width="340" height="205" valign="middle" bgcolor="#d8d5d0" background="${img}" style="width:340px;height:205px;background-color:#d8d5d0;background-image:url('${img}');background-position:${imgX}% ${imgY}%;background-size:cover;background-repeat:no-repeat;padding:0;font-size:0;line-height:0;">
+          <!--[if gte mso 9]>
+          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:340px;height:205px;">
+            <v:fill type="frame" src="${img}" color="#d8d5d0" />
+            <v:textbox inset="0,0,0,0">
+          <![endif]-->
+          <div style="width:340px;height:205px;font-size:0;line-height:0;">&nbsp;</div>
+          <!--[if gte mso 9]>
+            </v:textbox>
+          </v:rect>
+          <![endif]-->
+        </td>`
         : `<td class="banner-cell banner-cell--img" width="340" bgcolor="#d8d5d0" style="width:340px;height:205px;background-color:#d8d5d0;">&nbsp;</td>`;
 
       return `<table role="presentation" class="banner-table" width="750" border="0" cellpadding="0" cellspacing="0" style="width:750px;">
@@ -463,7 +474,8 @@ export function generateEmailHTML(blocks, settings) {
     .banner-table, .banner-table tr, .banner-table tbody { display: block !important; width: 100% !important; }
     .banner-cell { display: block !important; width: 100% !important; height: auto !important; box-sizing: border-box !important; }
     .banner-cell--text { padding: 20px !important; }
-    .banner-cell--img { padding: 0 !important; }
+    .banner-cell--img { padding: 0 !important; width: 100% !important; height: 220px !important; background-size: cover !important; background-position: center center !important; }
+    .banner-cell--img > div { width: 100% !important; height: 220px !important; }
     .banner-img { width: 100% !important; height: auto !important; max-height: 240px !important; object-fit: cover !important; }
     /* Roche logo: keep fixed size — never expand to 100% on mobile */
     .roche-logo { width: 80px !important; height: 42px !important; }
