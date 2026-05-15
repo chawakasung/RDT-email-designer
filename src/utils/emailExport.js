@@ -44,7 +44,7 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
         <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
           ${showLogo ? `<td valign="top" width="100" style="width:100px;vertical-align:top;padding:0;">${rocheLogoImg(flipped)}</td>` : ''}
           <td valign="middle" style="vertical-align:middle;padding:0;">
-            <p style="font-family:Arial,Helvetica,sans-serif;font-weight:300;font-size:${fs}px;line-height:1.1;color:#000000;margin:0;letter-spacing:-0.01em;">${headline}</p>
+            <p style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:200;font-size:${fs}px;line-height:1.1;color:#000000;margin:0;letter-spacing:-0.01em;">${headline}</p>
           </td>
         </tr></table>
       </td>`;
