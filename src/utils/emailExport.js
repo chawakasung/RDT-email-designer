@@ -432,6 +432,18 @@ function blockToEmailHTML(kind, props, primary, heroBg) {
   }
 }
 
+function absolutizeUrls(html) {
+  const origin = typeof window !== 'undefined' && window.location?.origin
+    ? window.location.origin
+    : 'https://rdt-email-designer.vercel.app';
+  // Rewrite any root-relative URL (e.g. "/samples/sample-01.webp") used in
+  // src="..." or url('...') / url("...") to absolute, so the email renders
+  // outside the app where relative paths can't resolve.
+  return html
+    .replace(/(src=")\/(?!\/)/g, `$1${origin}/`)
+    .replace(/(url\(\s*['"]?)\/(?!\/)/g, `$1${origin}/`);
+}
+
 export function generateEmailHTML(blocks, settings) {
   const primary = settings.brand?.primary || '#0B41CD';
   const heroBg = settings.brand?.heroBg || '#FFF7F5';
@@ -440,7 +452,7 @@ export function generateEmailHTML(blocks, settings) {
 
   const blockHTMLs = blocks.map(b => blockToEmailHTML(b.kind, b.props, primary, heroBg)).join('\n');
 
-  return `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
 <meta charset="utf-8">
@@ -511,6 +523,7 @@ ${blockHTMLs}
 <!-- /Email wrapper -->
 </body>
 </html>`;
+  return absolutizeUrls(html);
 }
 
 export function downloadEmailHTML(blocks, settings, emailName) {
